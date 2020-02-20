@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="header">
+    <div style="margin: 3px 10px">
+      <p class="h-title">Task Tracker</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="scrollable-content">
+      <div *ngIf="cardBoardArray.length > 0">
+        <div *ngFor="let cardArray of cardBoardArray;let cardId = index" [class]="cardArray.cssClass">
+          <div (drop)="onDrop($event, cardArray.list, undefined)" (dragover)="onDragOver($event)" *ngIf="!cardArray.btn_card">
+            <div class="card-header">
+              <input [value]="cardArray.title" placeholder="Enter list title">
+            </div>
+            <div class="card-body" (drop)="onDrop($event, cardArray.list, TaskId)" (dragover)="onDragOver($event)" *ngFor="let cardItems of cardArray.list;let TaskId =  index">
+              <div *ngIf="cardItems.editable">
+                <textarea class="content_area" [(ngModel)]="cardItems.content"></textarea>
+              </div>
+              <div class="inner-card" (dragstart)="onDragStart($event, TaskId, cardArray.list)" draggable="true" *ngIf="!cardItems.editable">
+                {{cardItems.content}}
+              </div>
+              <span *ngIf="cardItems.editable == false" class="edit pointer" (click)="doAction('edit',cardId,TaskId)">Edit</span>
+              <span *ngIf="cardItems.editable == true" class="save pointer" (click)="doAction('save',cardId,TaskId)">Save</span>
+            </div>
+            <div class="card-footer">
+              <div *ngIf="!cardArray.hide_btn" (click)="addNewTask(cardId)">
+                <p class="btn-new pointer">+ Add new card </p>
+              </div>
+              <div *ngIf="cardArray.hide_btn">
+                <span class="pointer" style="line-height: 40px;
+                      color: #000;
+                      margin-left: 20px;" (click)="removeNewTask(cardId)">Cancel
+                </span>
+              </div>
+              <div class="pointer" style="float: right;padding: 8px 14px 0 0;" (click)="removeCurrentCard(cardId)">
+                Remove Card
+              </div>
+            </div>
+          </div>
+          <div *ngIf="cardArray.btn_card" class="pointer" style="width: 100%;height: 100%;" (click)="addNewBoard()">
+            <p><span>+</span> Add new list</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
